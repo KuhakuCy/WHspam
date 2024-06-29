@@ -1,33 +1,108 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #000;
-    }
-
-    .animated-text {
-      font-family: Arial, sans-serif;
-      font-size: 36px;
-      color: #062d61;
-      animation: move-up-down 6s ease-in-out infinite;
-    }
-
-    @keyframes move-up-down {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-20px);
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Falling Stars</title>
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: black;
+  }
+  canvas {
+    display: block;
+  }
+</style>
 </head>
 <body>
-  <div class="animated-text">More Coming Soon!</div>
+<canvas id="starCanvas"></canvas>
+<script>
+  const canvas = document.getElementById('starCanvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  const numStars = 200;
+  const maxStarSize = 2;
+  const starSpeed = 0.5;
+  const mouseInfluence = 0.1;
+  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  
+  class Star {
+    constructor() {
+      this.reset();
+    }
+    
+    reset() {
+      this.x = Math.random() * canvas.width;
+      this.y = Math.random() * canvas.height;
+      this.size = Math.random() * maxStarSize;
+      this.speed = (Math.random() * starSpeed) + starSpeed;
+    }
+    
+    update() {
+      this.y += this.speed;
+      if (this.y > canvas.height) {
+        this.reset();
+        this.y = 0;
+      }
+    }
+    
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fillStyle = "white";
+      ctx.fill();
+    }
+  }
+  
+  for (let i = 0; i < numStars; i++) {
+    stars.push(new Star());
+  }
+  
+  let mouseX = canvas.width / 2;
+  let mouseY = canvas.height / 2;
+  
+  canvas.addEventListener('mousemove', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    mouseX = event.clientX - rect.left;
+    mouseY = event.clientY - rect.top;
+  });
+  
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(star => {
+      const dx = mouseX - star.x;
+      const dy = mouseY - star.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      const forceDirectionX = dx / distance;
+      const forceDirectionY = dy / distance;
+      const maxDistance = 100;
+      const force = (maxDistance - distance) / maxDistance;
+      
+      const directionX = (forceDirectionX * force * starSpeed * mouseInfluence);
+      const directionY = (forceDirectionY * force * starSpeed * mouseInfluence);
+      
+      if (distance < maxDistance) {
+        star.x -= directionX;
+        star.y -= directionY;
+      }
+      
+      star.update();
+      star.draw();
+    });
+    
+    requestAnimationFrame(animate);
+  }
+  
+  animate();
+  
+  window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  });
+</script>
 </body>
 </html>
