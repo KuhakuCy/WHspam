@@ -25,7 +25,7 @@
   const numStars = 200;
   const maxStarSize = 2;
   const starSpeed = 0.5;
-  const mouseInfluence = 0.1;
+  const mouseInfluence = 1.5;
   
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
@@ -40,13 +40,22 @@
       this.y = Math.random() * canvas.height;
       this.size = Math.random() * maxStarSize;
       this.speed = (Math.random() * starSpeed) + starSpeed;
+      this.vx = 0;
+      this.vy = this.speed;
     }
     
     update() {
-      this.y += this.speed;
+      this.x += this.vx;
+      this.y += this.vy;
       if (this.y > canvas.height) {
         this.reset();
         this.y = 0;
+      }
+      if (this.x < 0) {
+        this.x = canvas.width;
+      }
+      if (this.x > canvas.width) {
+        this.x = 0;
       }
     }
     
@@ -74,20 +83,23 @@
   function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     stars.forEach(star => {
-      const dx = mouseX - star.x;
-      const dy = mouseY - star.y;
+      const dx = star.x - mouseX;
+      const dy = star.y - mouseY;
       const distance = Math.sqrt(dx * dx + dy * dy);
       const forceDirectionX = dx / distance;
       const forceDirectionY = dy / distance;
-      const maxDistance = 100;
+      const maxDistance = 150;
       const force = (maxDistance - distance) / maxDistance;
       
       const directionX = (forceDirectionX * force * starSpeed * mouseInfluence);
       const directionY = (forceDirectionY * force * starSpeed * mouseInfluence);
       
       if (distance < maxDistance) {
-        star.x -= directionX;
-        star.y -= directionY;
+        star.vx = directionX;
+        star.vy = directionY + star.speed;
+      } else {
+        star.vx = 0;
+        star.vy = star.speed;
       }
       
       star.update();
