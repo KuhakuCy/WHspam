@@ -242,3 +242,35 @@
   </div>
 </body>
 </html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image in Left Corner</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    .image-container {
+        position: relative;
+        width: 300px; /* Adjust width as needed */
+        height: 200px; /* Adjust height as needed */
+        overflow: hidden;
+    }
+    .image-container img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: auto;
+    }
+</style>
+</head>
+<body>
+    <div class="image-container">
+        <img src="https://pngimg.com/uploads/children/children_PNG18064.png" alt="Children">
+    </div>
+</body>
+</html>
