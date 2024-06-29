@@ -1,12 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>HTML Elements Reference</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #000;
+    }
+
+    .animated-text {
+      font-family: Arial, sans-serif;
+      font-size: 36px;
+      color: #062d61;
+      animation: move-up-down 6s ease-in-out infinite;
+    }
+
+    @keyframes move-up-down {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+  </style>
 </head>
 <body>
-
-<h1>This is a heading</h1>
-<p>This is a paragraph.</p>
-
+  <div class="animated-text">More Coming Soon!</div>
 </body>
 </html>
